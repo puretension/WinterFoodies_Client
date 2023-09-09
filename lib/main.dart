@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:syncfusion_flutter_core/localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:winter_foodies/common/const/colors.dart';
-import 'package:winter_foodies/common/view/select_screen.dart'; // 다언어 설정
+import 'package:winter_foodies/user/view/select_screen.dart'; // 다언어 설정
 
 void main() {
 

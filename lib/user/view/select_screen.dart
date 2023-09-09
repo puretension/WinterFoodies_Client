@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:winter_foodies/common/component/next_button.dart';
 import 'package:winter_foodies/common/const/colors.dart';
+import 'package:winter_foodies/user/view/login_screen.dart';
+import 'package:winter_foodies/user/view/signup_screen.dart';
 
 class SelectScreen extends StatelessWidget {
   @override
@@ -65,7 +67,7 @@ class SelectScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: height * 0.37,
+              height: height * 0.33,
               child: Row(
                 children: [
                   Padding(
@@ -95,12 +97,16 @@ class SelectScreen extends StatelessWidget {
             ),
             NextButton(
                 color: PRIMARY_BROWN_COLOR,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
+                },
                 buttonName: '로그인하기',
                 isButtonEnabled: true),
             NextButton(
                 color: PRIMARY_ORANGE_COLOR,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignupScreen()));
+                },
                 buttonName: '회원가입하기',
                 isButtonEnabled: true),
           ],
