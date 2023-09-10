@@ -20,14 +20,14 @@ class DefaultLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor ?? BACKGROUND_YELLOW_COLOR,
-      appBar: renderAppBar(),
-      body: child,
+      appBar: renderAppBar(context),
+      body: SingleChildScrollView(child: child,),
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
     );
   }
 
-  AppBar? renderAppBar() {
+  AppBar? renderAppBar(BuildContext context) {
     if (title == null) {
       return null;
     } else {
@@ -37,12 +37,19 @@ class DefaultLayout extends StatelessWidget {
         title: Text(
           title!,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 17,
             fontWeight: FontWeight.w500,
           ),
         ),
         foregroundColor: Colors.black,
+        leading: IconButton(
+          icon: Image.asset('asset/icon/back_icon.png',width: 20,),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       );
     }
   }
+
 }

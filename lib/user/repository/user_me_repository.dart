@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:winter_foodies/common/const/data.dart';
 import 'package:winter_foodies/common/dio/dio.dart';
+import 'package:winter_foodies/user/model/signup_response.dart';
 import 'package:winter_foodies/user/model/signup_user_model.dart';
 import 'package:winter_foodies/user/model/user_model.dart';
 
-part 'me_repository.g.dart';
+part 'user_me_repository.g.dart';
 
 final userMeRepositoryProvider = Provider<UserMeRepository>(
       (ref) {
@@ -28,6 +29,12 @@ abstract class UserMeRepository {
   Future<UserModel> getMe();
 
   @POST('/signup')
-  Future<UserModel> postUser(@Body() SignupUserModel user);
+  Future<SignupResponse> postUser(@Body() SignupUserModel user);
+
+  @GET('/logout')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<String> logout();
 
 }

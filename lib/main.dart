@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:syncfusion_flutter_core/localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:winter_foodies/common/const/colors.dart';
+import 'package:winter_foodies/common/provider/go_router.dart';
 import 'package:winter_foodies/user/view/select_screen.dart'; // 다언어 설정
 
 void main() {
@@ -17,19 +18,20 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final route = ref.watch(routeProvider);
     return ScreenUtilInit(
       designSize: Size(375, 812),
-      builder: (context, child) => MaterialApp(
+      builder: (context, child) => MaterialApp.router(
         theme: ThemeData(
           fontFamily: 'GmarketSans',
         ),
         debugShowCheckedModeBanner: false,
-        home: SelectScreen(), // 기본 화면을 설정하거나 이 부분을 수정해주세요.
+        routerConfig: route,
         localizationsDelegates: const [  // 다언어 설정
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

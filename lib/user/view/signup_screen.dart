@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:winter_foodies/common/component/custom_text_form_field.dart';
 import 'package:winter_foodies/common/component/next_button.dart';
 import 'package:winter_foodies/common/const/colors.dart';
 import 'package:winter_foodies/common/const/text.dart';
 import 'package:winter_foodies/user/layout/default_layout.dart';
+import 'package:winter_foodies/user/model/signup_user_model.dart';
+import 'package:winter_foodies/user/provider/user_me_provider.dart';
 import 'package:winter_foodies/user/repository/auth_repository.dart';
 import 'package:winter_foodies/user/view/login_screen.dart';
 
@@ -22,6 +25,8 @@ extension InputValidate on String {
 }
 
 class SignupScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'signup';
+
   const SignupScreen({super.key});
 
   @override
@@ -29,7 +34,6 @@ class SignupScreen extends ConsumerStatefulWidget {
 }
 
 class _SignupScreenState extends ConsumerState<SignupScreen> {
-  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController nicknameController = TextEditingController();
   TextEditingController phoneNumController = TextEditingController();
@@ -41,24 +45,25 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   bool isNickNameValid = false;
   bool isPhoneNumValid = false;
   bool isPasswordValid = false;
+  bool isPasswordCheckValid = false;
   bool isButtonEnabled = false;
 
-  String? nameErrorText;
   String? nicknameErrorText;
   String? ageErrorText;
   String? phoneNumErrorText;
-  // String? jobErrorText;
   String? emailErrorText;
   String? emailValidText;
   String? accountErrorText;
+  String? passwordErrorText;
+  String? passwordDifferentErrorText;
 
-  void checkNameEnabled() {
-    String name = nameController.text.trim();
+  void checkNickNameEnabled() {
+    String name = nicknameController.text.trim();
     bool isValid = RegExp(r'^[a-zA-Z가-힣]{2,}$').hasMatch(name);
 
     setState(() {
-      isNameValid = isValid;
-      nameErrorText = isValid ? null : '영문자 또는 한글로 2자 이상 입력해 주세요';
+      isNickNameValid = isValid;
+      nicknameErrorText = isValid ? null : '영문자 또는 한글로 2자 이상 입력해주세요!';
     });
   }
 
@@ -73,13 +78,51 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     checkButtonEnabled();
   }
 
+  void checkEmailEnabled() {
+    String email = emailController.text.trim();
+    bool isValid = email.isValidEmailFormat();
+
+    setState(() {
+      isEmailValid = isValid;
+      emailErrorText = isValid ? null : '이메일 형식에 알맞게 입력해주세요';
+    });
+    checkButtonEnabled();
+  }
+
+
+  void checkPasswordEnabled() {
+    String password = passwordController.text.trim();
+    bool isValid = RegExp(
+        r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$')
+        .hasMatch(password);
+
+    if (!isValid) {
+      passwordErrorText = '8~16자 영문, 숫자, 특수문자를 사용하세요';
+    }
+
+    setState(() {
+      isPasswordValid = isValid;
+      // 아래 변수는 뷰에서 표시되는 에러 메시지로 사용될 수 있습니다.
+      passwordErrorText = passwordErrorText;
+    });
+    checkButtonEnabled();
+  }
+
+  void checkSamePasswordEmabled(){
+    String password = passwordController.text;
+    String passwordCheck = passwordCheckController.text;
+
+    setState(() {
+      isPasswordCheckValid = password == passwordCheck;
+    });
+    checkButtonEnabled();
+  }
+
+
   void checkButtonEnabled() {
     setState(() {
-      isButtonEnabled = isEmailValid &&
-          isPasswordValid &&
-          isNameValid &&
-          isNickNameValid &&
-          isPhoneNumValid;
+      isButtonEnabled =
+          isEmailValid && isPasswordValid && isPasswordCheckValid && isNickNameValid && isPhoneNumValid;
     });
   }
 
@@ -88,16 +131,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     return DefaultLayout(
       title: '회원가입',
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Image.asset(
-                  'asset/img/loading/loading.png',
-                ),
+              Image.asset(
+                'asset/img/home/home1.png',
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
@@ -106,17 +146,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   style: textBrownStyle,
                 ),
               ),
-              Text(
-                '이름',
-                style: signupReqStyle,
-              ),
-              CustomTextFormField(
-                controller: nameController,
-                hintText: '본인의 이름을 입력해 주세요',
-                onChanged: (String value) {
-                  checkNameEnabled();
-                },
-                errorText: isNameValid ? null : nameErrorText,
+              SizedBox(
+                height: 8,
               ),
               Text(
                 '이메일',
@@ -127,11 +158,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    flex: 5, // 비율을 사용하여 width를 조절
+                    flex: 5,
                     child: CustomTextFormField(
                       controller: emailController,
-                      hintText: '이메일을 입력헤주세요',
-                      onChanged: (String value) {},
+                      hintText: '이메일을 입력해주세요',
+                      onChanged: (String value) {
+                        checkEmailEnabled();
+                      },
+                      errorText: isEmailValid ? null : emailErrorText,
                     ),
                   ),
                   Expanded(
@@ -183,12 +217,19 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         ),
                         child: Text(
                           '중복확인',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ],
+              ),
+              SizedBox(
+                height: 8,
               ),
               Text(
                 '닉네임',
@@ -198,22 +239,25 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 controller: nicknameController,
                 hintText: '닉네임을 입력해 주세요',
                 onChanged: (String value) {
-                  checkNameEnabled();
+                  checkNickNameEnabled();
                 },
-                errorText: isNickNameValid ? null : nameErrorText,
+                errorText: isNickNameValid ? null : nicknameErrorText,
+              ),
+              SizedBox(
+                height: 8,
               ),
               Text(
-                '전화번호',
+                '휴대폰 번호',
                 style: signupReqStyle,
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    flex: 5, // 비율을 사용하여 width를 조절
+                    flex: 8, // 비율을 사용하여 width를 조절
                     child: CustomTextFormField(
                       controller: phoneNumController,
-                      hintText: '번호를 입력해 주세요(' '-' '제외)',
+                      hintText: '번호를 입력해 주세요(' '-' '포함)',
                       onChanged: (String value) {
                         checkPhoneNumEnabled();
                       },
@@ -222,7 +266,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   Expanded(
                     flex: 2,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 2, 44, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 2, 10, 0),
                       child: ElevatedButton(
                         onPressed: () {
                           ref
@@ -263,17 +307,21 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0), // 모서리 깎기
                           ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 14),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 14),
                         ),
                         child: Text(
                           '인증',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w400),
                         ),
                       ),
                     ),
                   ),
                 ],
+              ),
+              SizedBox(
+                height: 8,
               ),
               Text(
                 '비밀번호',
@@ -281,28 +329,67 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               ),
               CustomTextFormField(
                 controller: passwordController,
-                hintText: '6자 이상의 영문/숫자 조합',
-                onChanged: (String value) {},
+                hintText: '8~16자의 영문, 숫자, 특수문자 포함',
+                onChanged: (String value) {
+                  checkPasswordEnabled();
+                },
                 obscureText: true,
+                errorText: isPasswordValid ? null : passwordErrorText,
+              ),
+              SizedBox(
+                height: 8,
               ),
               Text(
                 '비밀번호 확인',
                 style: signupReqStyle,
               ),
               CustomTextFormField(
-                controller: passwordController,
+                controller: passwordCheckController,
                 hintText: '재입력해 주세요',
-                onChanged: (String value) {},
+                onChanged: (String value) {
+                  checkSamePasswordEmabled();
+                },
                 obscureText: true,
+                errorText: isPasswordCheckValid ? null : passwordDifferentErrorText,
+              ),
+              SizedBox(
+                height: 30,
               ),
               NextButton(
                 color: PRIMARY_BROWN_COLOR,
                 onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                  if (isButtonEnabled) {
+                    try {
+                      ref.read(userMeProvider.notifier).postUser(
+                            SignupUserModel(
+                              nickname: nicknameController.text.toString(),
+                              username: emailController.text.toString(),
+                              password: passwordController.text.toString(),
+                              phoneNumber: phoneNumController.text.toString(),
+                              confirmPassword:
+                                  passwordCheckController.text.toString(),
+                            ),
+                          );
+                      print('성공적 수행');
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => LoginScreen(),
+                        ),
+                      );
+                    } catch (e) {
+                      print(e);
+                      print('에러');
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("모든 필드를 올바르게 입력해주세요!"),
+                      ),
+                    );
+                  }
                 },
                 buttonName: '가입완료!',
-                isButtonEnabled: true,
+                isButtonEnabled: isButtonEnabled,
               ),
             ],
           ),
@@ -312,91 +399,3 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 }
 
-class CustomTextFormField extends StatefulWidget {
-  final String? hintText;
-  final String? errorText;
-  final bool obscureText;
-  final bool autofocus;
-  final ValueChanged<String>? onChanged;
-  final TextEditingController? controller;
-  final String? name;
-  final int? textFieldMinLine;
-  final bool? enable;
-  final int? maxLines; // 추가
-  final bool? expands; // 추가
-
-  const CustomTextFormField({
-    this.enable,
-    required this.onChanged,
-    this.textFieldMinLine = 1,
-    this.autofocus = false,
-    this.obscureText = false,
-    this.errorText,
-    this.hintText,
-    this.controller,
-    this.name,
-    this.maxLines, // 추가
-    this.expands, // 추가
-    super.key,
-  });
-
-  @override
-  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
-}
-
-class _CustomTextFormFieldState extends State<CustomTextFormField> {
-  bool showErrorText = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final baseBorder = OutlineInputBorder(
-      borderSide: BorderSide(
-        color: BORDER_COLOR,
-        width: 1.0,
-      ),
-      borderRadius: BorderRadius.circular(6.0),
-    );
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 4, 14, 6),
-      child: TextFormField(
-        enabled: widget.enable ?? true,
-        onTap: () {
-          setState(() {
-            showErrorText = false;
-          });
-        },
-        controller: widget.controller,
-        cursorColor: CURSOR_COLOR,
-        obscureText: widget.obscureText,
-        obscuringCharacter: '●',
-        minLines:
-            widget.expands == true ? null : widget.textFieldMinLine, // 수정된 부분
-        maxLines: widget.expands == true ? null : (widget.maxLines ?? 1),
-        expands: widget.expands ?? false, // 연결
-        autofocus: widget.autofocus,
-        onChanged: widget.onChanged,
-        decoration: InputDecoration(
-          filled: true, // Added this line to enable background color
-          fillColor: Colors
-              .white, // Added this line to set the background color to white
-          contentPadding: EdgeInsets.fromLTRB(14, 12, 14, 12),
-          hintText: widget.hintText,
-          errorText: widget.errorText,
-          hintStyle: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 15.0,
-            color: WHITE_LIGHT4_COLOR,
-          ),
-          border: baseBorder,
-          focusedBorder: baseBorder.copyWith(
-            borderSide: baseBorder.borderSide.copyWith(
-              color: DARK_PRIMARY_COLOR,
-            ),
-          ),
-          enabledBorder: baseBorder,
-        ),
-      ),
-    );
-  }
-}

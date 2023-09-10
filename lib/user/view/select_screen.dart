@@ -5,6 +5,7 @@ import 'package:winter_foodies/user/view/login_screen.dart';
 import 'package:winter_foodies/user/view/signup_screen.dart';
 
 class SelectScreen extends StatelessWidget {
+  static String get routeName => 'select';
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -81,7 +82,7 @@ class SelectScreen extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 50),
                       child: Image.asset(
-                        'asset/select/select_boong.png',
+                        'asset/select/select_change_boong.png',
                       ),
                     ),
                   ),
@@ -95,20 +96,26 @@ class SelectScreen extends StatelessWidget {
                 width: width * 0.3,
               ),
             ),
-            NextButton(
-                color: PRIMARY_BROWN_COLOR,
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
-                },
-                buttonName: '로그인하기',
-                isButtonEnabled: true),
-            NextButton(
-                color: PRIMARY_ORANGE_COLOR,
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignupScreen()));
-                },
-                buttonName: '회원가입하기',
-                isButtonEnabled: true),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: NextButton(
+                  color: PRIMARY_BROWN_COLOR,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
+                  },
+                  buttonName: '로그인하기',
+                  isButtonEnabled: true),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: NextButton(
+                  color: PRIMARY_ORANGE_COLOR,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignupScreen()));
+                  },
+                  buttonName: '회원가입하기',
+                  isButtonEnabled: true),
+            ),
           ],
         ),
       ),

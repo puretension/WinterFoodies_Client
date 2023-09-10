@@ -12,5 +12,18 @@ const textBrownStyle = TextStyle(
 const signupReqStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: GREY_PRIMARY_COLOR,
-  fontSize: 14,
+  fontSize: 13,
+);
+
+
+const socialReqStyle = TextStyle(
+  fontWeight: FontWeight.w400,
+  color: CupertinoColors.black,
+  fontSize: 15,
+);
+
+const socialReq2Style = TextStyle(
+  fontWeight: FontWeight.w400,
+  color: DARK_PRIMARY_COLOR,
+  fontSize: 13,
 );

@@ -22,12 +22,12 @@ class _NextButtonState extends State<NextButton> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 15),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(
-            height: 60,
+            height: 50,
             child: ElevatedButton(
               onPressed: widget.isButtonEnabled ? widget.onPressed : null,
               style: ElevatedButton.styleFrom(
