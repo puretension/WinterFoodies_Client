@@ -7,7 +7,7 @@ import 'package:winter_foodies/common/const/text.dart';
 import 'package:winter_foodies/user/layout/default_layout.dart';
 import 'package:winter_foodies/user/provider/user_me_provider.dart';
 import 'package:winter_foodies/user/view/email_screen.dart';
-import 'package:winter_foodies/user/view/home_screen.dart';
+import 'package:winter_foodies/common/view/root_tab.dart';
 import 'package:winter_foodies/user/view/password_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {

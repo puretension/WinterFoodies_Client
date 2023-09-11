@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:winter_foodies/user/model/user_model.dart';
 import 'package:winter_foodies/user/provider/user_me_provider.dart';
-import 'package:winter_foodies/user/view/home_screen.dart';
+import 'package:winter_foodies/common/view/root_tab.dart';
 import 'package:winter_foodies/user/view/login_screen.dart';
 import 'package:winter_foodies/user/view/select_screen.dart';
 import 'package:winter_foodies/user/view/signup_screen.dart';
@@ -122,19 +122,21 @@ class AuthProvider extends ChangeNotifier {
   FutureOr<String?> redirectLogic(BuildContext context, GoRouterState state) {
     final UserModelBase? user = ref.read(userMeProvider);
 
-    // 회원가입 페이지에서 회원가입 완료 후 로그인 페이지로 리다이렉트
-    if (user is UserModel &&
-        (state.matchedLocation == '/select' ||
-            state.matchedLocation == '/login' ||
-            state.matchedLocation == '/splash')) return '/';
+    print(state.matchedLocation);
 
-    if (!state.matchedLocation.startsWith('/login') && user == null)
+    if (user == null && state.matchedLocation != '/select') {
       return '/select';
+    }
 
-    // if (user is UserModelError) return '/select';
+    if (user is UserModel && (state.matchedLocation == '/select' ||
+        state.matchedLocation == '/login' ||
+        state.matchedLocation == '/splash')) {
+      return '/';
+    }
 
     return null;
   }
+
 
 // FutureOr<String?> redirectLogic(BuildContext context, GoRouterState state) {
 //   final UserModelBase? user = ref.read(userMeProvider);
