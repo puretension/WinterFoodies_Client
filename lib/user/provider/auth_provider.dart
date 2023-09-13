@@ -122,12 +122,18 @@ class AuthProvider extends ChangeNotifier {
   FutureOr<String?> redirectLogic(BuildContext context, GoRouterState state) {
     final UserModelBase? user = ref.read(userMeProvider);
 
+
     print(state.matchedLocation);
 
-    if (user == null && state.matchedLocation != '/select') {
+    if(user is UserModelLoading){
+      return '/splash';
+    }
+
+    if (user is! UserModel) {
       return '/select';
     }
 
+    print('hall');
     if (user is UserModel && (state.matchedLocation == '/select' ||
         state.matchedLocation == '/login' ||
         state.matchedLocation == '/splash')) {

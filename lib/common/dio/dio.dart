@@ -39,22 +39,6 @@ class CustomInterceptor extends Interceptor {
         'authorization': 'Bearer $token',
       });
     }
-
-    // final isStatus500 = handler.response?.statusCode == 500;
-    //
-    // if(isStatus500){
-    //   return null;
-    // }
-
-    // if (options.headers['refreshToken'] == 'true') {
-    //   options.headers.remove('refreshToken');
-    //   final token = await storage.read(key: REFRESH_TOKEN_KEY);
-    //   //실제 토근으로 대체
-    //   options.headers.addAll({
-    //     'authorization': 'Bearer $token',
-    //   });
-    // }
-
     return super.onRequest(options, handler);
   }
 

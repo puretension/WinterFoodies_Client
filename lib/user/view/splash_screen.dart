@@ -8,18 +8,10 @@ class SplashScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return DefaultLayout(
+    return Scaffold(
       backgroundColor: Colors.white,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(
-              color: PRIMARY_BROWN_COLOR,
-            ),
-          ],
-        ),
+      body: Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }

@@ -45,6 +45,8 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NMFClientId</key>
+    <string>j1u6lgk6kn</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>위치정보가 필요합니다!</string>
     <key>NSLocationAlwaysUsageDescription</key>

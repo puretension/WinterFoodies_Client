@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:winter_foodies/common/const/colors.dart';
+import 'package:winter_foodies/common/view/home_screen.dart';
 import 'package:winter_foodies/common/view/location_screen.dart';
 import 'package:winter_foodies/location/model/location_model.dart';
-import 'package:winter_foodies/main_page/view/home_screen.dart';
+import 'package:winter_foodies/location/view/location_screen.dart';
 import 'package:winter_foodies/my_page/view/my_page_screen.dart';
 import 'package:winter_foodies/order/order_screen.dart';
 import 'package:winter_foodies/user/layout/default_layout.dart';
@@ -19,6 +20,9 @@ class RootTab extends StatefulWidget {
 
 class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   late TabController controller;
+  LatLng? currentLatLng;
+  String? currentAddress;
+
 
   int index = 0;
 
@@ -54,8 +58,13 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         controller: controller,
         physics: NeverScrollableScrollPhysics(),
         children: [
-          HomeScreen(),
-          LocationScreen(),
+          HomeScreen(address: currentAddress,onRefresh: (){}),
+          LocationScreen(onLocationUpdate: (latLng, address) {
+            setState(() {
+              currentLatLng = latLng;
+              currentAddress = address;
+            });
+          }),
           OrderScreen(),
           MyPageScreen(),
         ],
