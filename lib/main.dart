@@ -16,6 +16,7 @@ void main() async {
       print("********* 네이버맵 인증오류 : $ex *********");
     },
   );
+
   runApp(
     ProviderScope(
       child: MyApp(),

@@ -40,7 +40,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   Widget build(BuildContext context) {
     final baseBorder = OutlineInputBorder(
       borderSide: BorderSide(
-        color: PRIMARY_ORANGE_COLOR,
+        color: WHITE_LIGHT2_COLOR,
         width: 1.0,
       ),
       borderRadius: BorderRadius.circular(6.0),

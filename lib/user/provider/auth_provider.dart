@@ -125,10 +125,11 @@ class AuthProvider extends ChangeNotifier {
 
     print(state.matchedLocation);
 
-    if(user is UserModelLoading){
-      return '/splash';
-    }
+    // if(user is UserModelLoading){
+    //   return '/splash';
+    // }
 
+    print(state.matchedLocation);
     if (user is! UserModel) {
       return '/select';
     }
