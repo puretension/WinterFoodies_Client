@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:winter_foodies/common/view/splash_screen.dart';
 import 'package:winter_foodies/user/model/user_model.dart';
 import 'package:winter_foodies/user/provider/user_me_provider.dart';
 import 'package:winter_foodies/common/view/root_tab.dart';
 import 'package:winter_foodies/user/view/login_screen.dart';
 import 'package:winter_foodies/user/view/select_screen.dart';
 import 'package:winter_foodies/user/view/signup_screen.dart';
-import 'package:winter_foodies/user/view/splash_screen.dart';
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider(ref: ref);
@@ -119,48 +119,26 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
   FutureOr<String?> redirectLogic(BuildContext context, GoRouterState state) {
     final UserModelBase? user = ref.read(userMeProvider);
 
+    // 회원가입 페이지에서 회원가입 완료 후 로그인 페이지로 리다이렉트
+    if (state.matchedLocation == '/signup' && user is UserModel) return '/';
 
-    print(state.matchedLocation);
+    if (state.matchedLocation.startsWith('/signup')) return null;
 
-    // if(user is UserModelLoading){
-    //   return '/splash';
-    // }
+    if (state.matchedLocation == '/login' && user is UserModel) return '/';
 
-    print(state.matchedLocation);
-    if (user is! UserModel) {
-      return '/select';
-    }
+    if (!state.matchedLocation.startsWith('/login') && user == null) return '/select';
 
-    print('hall');
-    if (user is UserModel && (state.matchedLocation == '/select' ||
-        state.matchedLocation == '/login' ||
-        state.matchedLocation == '/splash')) {
-      return '/';
-    }
+    if (user is UserModel &&
+        (state.matchedLocation == '/select'
+            || state.matchedLocation == '/login' ||
+            state.matchedLocation == '/splash')) return '/';
+
+    // if (user is UserModelError) return '/select';
 
     return null;
   }
-
-
-// FutureOr<String?> redirectLogic(BuildContext context, GoRouterState state) {
-//   final UserModelBase? user = ref.read(userMeProvider);
-//
-//   if ((state.matchedLocation == '/signup' || state.matchedLocation == '/login') && user is UserModel)
-//     return '/';
-//
-//   if (state.matchedLocation.startsWith('/signup')) return null;
-//
-//   if (state.matchedLocation == '/login' && user is UserModel) return '/';
-//
-//   if (!state.matchedLocation.startsWith('/login') && user == null) return '/select';
-//
-//   if (user is UserModel &&
-//       (state.matchedLocation == '/select'
-//           || state.matchedLocation == '/splash')) return '/';
-//
-//   return null;
-// }
 }

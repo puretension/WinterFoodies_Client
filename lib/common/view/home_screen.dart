@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winter_foodies/common/component/custom_text_form_field.dart';
 import 'package:winter_foodies/common/const/colors.dart';
 import 'package:winter_foodies/common/const/text.dart';
+import 'package:winter_foodies/common/repository/repository_test_screen.dart';
 import 'package:winter_foodies/location/provider/location_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -61,7 +62,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     flex: 8, // 8의 비율로 차지
                     child: CustomTextFormField(
                       hintText: "가게명, 음식명 검색!",
-                      onChanged: (value) => {},
+                      onChanged: (value) => {
+
+                      },
                       controller: searchController,
                     ),
                   ),
@@ -78,6 +81,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         onPressed: () {
                           // 검색 버튼이 클릭됐을 때의 코드를 여기에 작성하세요.
                           print("검색 버튼 클릭!");
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => MainDataTestScreen(),
+                            ),
+                          );
                         },
                       ),
                     ),
@@ -154,7 +162,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     padding: const EdgeInsets.only(bottom: 5),
                     child: Text(
                       '${index + 1}. 음식이름 ${index + 1}',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
                     ),
                   );
                 }),

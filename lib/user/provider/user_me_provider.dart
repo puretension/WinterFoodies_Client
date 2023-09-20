@@ -72,15 +72,18 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
 
 
   Future<void> getMe() async {
+    final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
-    print('accessToken: $accessToken');
+    print('바로밑이 refresh');
+    print(refreshToken);
+    print(accessToken);
 
-    // //refreshToken이 만료된게 아니라면 -> 강제 로그아웃(이대로하면 너무 자주로그아웃됨)
-    // if (accessToken == null) {
-    //   state = null; //토큰이 2중 1개라도 없다면 로그아웃
-    //   return;
-    // }
+    //refreshToken이 만료된게 아니라면 -> 강제 로그아웃(이대로하면 너무 자주로그아웃됨)
+    if (refreshToken == null) {
+      state = null; //토큰이 2중 1개라도 없다면 로그아웃
+      return;
+    }
 
     final resp = await repository.getMe();
     state = resp;
@@ -102,18 +105,22 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
         password: password,
       );
 
+      //응답받은 refresh, accesstoken을 storage에 그대로 넣어준다
+
+      await storage.write(key: REFRESH_TOKEN_KEY, value: resp.refreshToken);
       await storage.write(key: ACCESS_TOKEN_KEY, value: resp.accessToken);
 
-      print('accessToken with login: ${resp.accessToken}');
-
-      final userResp = await repository.getMe();
+      //storage에 넣은 토큰이 유효한지 판단하기 위해서(서버에서 내 유저정보를 가져올 수 있다면?) getMe()
+      // 유효한 토큰임을 인증
+      final userResp = await repository.
+      getMe();
 
       state = userResp;
 
       return userResp;
     } catch (e) {
       //ID잘못이다, PW잘못이다 세부작업 필요 ->  Repository 수정필요
-      state = UserModelError(message: '로그인에 실패했습니다');
+      state = UserModelError(message: '로그인에 실갸패했습니다');
 
       return Future.value(state);
     }
@@ -142,7 +149,9 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
 
   Future<String?> logout() async {
     state = null;
+    print('로그아웃 진행중');
     Future.wait([
+      storage.delete(key: REFRESH_TOKEN_KEY),
       storage.delete(key: ACCESS_TOKEN_KEY),
     ]);
     try {
