@@ -9,11 +9,11 @@ part of 'store_response_dto_list.dart';
 StoreResponseDtoList _$StoreResponseDtoListFromJson(
         Map<String, dynamic> json) =>
     StoreResponseDtoList(
-      json['storeId'] as int,
-      json['name'] as String,
-      json['latitude'] as String,
-      json['longitude'] as String,
-      DataUtils.pathToUrl(json['thumbNailImgUrl'] as String),
+      (json['storeId'] as num?)?.toDouble(),
+      json['name'] as String?,
+      (json['latitude'] as num?)?.toDouble(),
+      (json['longitude'] as num?)?.toDouble(),
+      json['thumbNailImgUrl'] as String?,
     );
 
 Map<String, dynamic> _$StoreResponseDtoListToJson(

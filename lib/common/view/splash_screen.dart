@@ -1,66 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:winter_foodies/common/const/colors.dart';
-import 'package:winter_foodies/user/layout/default_layout.dart';
-
-// class SplashScreenOverlay extends StatefulWidget {
-//   final Widget child; // 기존 위젯을 받아오기 위한 변수
-//
-//   SplashScreenOverlay({required this.child});
-//
-//   @override
-//   _SplashScreenOverlayState createState() => _SplashScreenOverlayState();
-// }
-//
-// class _SplashScreenOverlayState extends State<SplashScreenOverlay> {
-//   int _currentImageIndex = 1;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _changeLoadingImage();
-//   }
-//
-//   _changeLoadingImage() async {
-//     await Future.delayed(Duration(seconds: 1), () {
-//       if (mounted) {
-//         setState(() {
-//           _currentImageIndex++;
-//           if (_currentImageIndex > 3) _currentImageIndex = 1; // 이미지를 1부터 다시 시작
-//         });
-//         _changeLoadingImage();
-//       }
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Stack(
-//       children: [
-//         widget.child, // 기존 위젯
-//         Container(
-//           color: Colors.black.withOpacity(0.7),
-//           child: Center(
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Image.asset('asset/img/loading$_currentImageIndex.png'),
-//                 SizedBox(height: 16.0),
-//                 CircularProgressIndicator(color: Colors.white),
-//               ],
-//             ),
-//           ),
-//         )
-//       ],
-//     );
-//   }
-// }
-//
-
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({Key? key}) : super(key: key);
 
   static String get routeName => 'splash';
 
@@ -75,47 +16,63 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _changeLoadingImage();
-    _showOverlay(context);
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      // 모든 이미지를 미리 캐시에 저장
+      for (int i = 1; i <= 3; i++) {
+        precacheImage(AssetImage('asset/img/loading/loading$i.png'), context);
+      }
+
+      _changeLoadingImage();
+      _showOverlay(context);
+    });
   }
+
 
   _changeLoadingImage() async {
     await Future.delayed(Duration(seconds: 1), () {
       if (mounted) {
         setState(() {
           _currentImageIndex++;
-          if (_currentImageIndex > 3) _currentImageIndex = 1; // 이미지를 1부터 다시 시작
+          // Overlay 업데이트
+          overlayEntry.markNeedsBuild();
+          _changeLoadingImage();
+          if (_currentImageIndex > 3) {
+            _currentImageIndex = 1; // 이미지를 다시 시작
+          }
         });
-        _changeLoadingImage();
+
+        // 재귀 호출로 계속해서 이미지 순환 유지
+        print(_currentImageIndex);
+
       }
     });
+
   }
 
-  _showOverlay(BuildContext context) {
+  void _showOverlay(BuildContext context) {
     overlayEntry = OverlayEntry(
-      builder: (context) => _buildOverlayContent(),
+        builder: (context) => StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) =>
+              Container(
+                color: Colors.black.withOpacity(0.7),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('asset/img/loading/loading$_currentImageIndex.png'),
+                    ],
+                  ),
+                ),
+              ),
+        )
     );
-    Overlay.of(context).insert(overlayEntry);
+
+    Overlay.of(context)?.insert(overlayEntry);
   }
 
-  _removeOverlay() {
+  void removeOverlay() {
     overlayEntry.remove();
-  }
-
-  Widget _buildOverlayContent() {
-    return Container(
-      color: Colors.black.withOpacity(0.7),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('asset/img/loading$_currentImageIndex.png'),
-            SizedBox(height: 16.0),
-            CircularProgressIndicator(color: Colors.white),
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -125,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void dispose() {
-    _removeOverlay();
+    removeOverlay();
     super.dispose();
   }
 }

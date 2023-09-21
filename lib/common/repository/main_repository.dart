@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:winter_foodies/common/model/main_page_model.dart';
+import 'package:winter_foodies/restaurant/model/popular_store_dto_list.dart';
 
 part 'main_repository.g.dart';
 
@@ -26,4 +27,11 @@ abstract class MainRepository {
     @Query('latitude') double? latitude,
     @Query('longitude') double? longitude,
   });
+
+  // @GET('/1/popular/')
+  // Future <List<PopularStoreDtoList>> fetchMainData2({
+  //   @Query('latitude') double? latitude,
+  //   @Query('longitude') double? longitude,
+  // });
+
 }

@@ -13,8 +13,8 @@ class MainDataTestScreen extends ConsumerWidget {
           onPressed: () async {
             try {
               final response = await mainRepository.fetchMainData(
-                  latitude: 37.5665,  // 예제 위도
-                  longitude: 126.9780 // 예제 경도
+                  latitude: 37.381798,  // 예제 위도
+                  longitude: 126.800944 // 예제 경도
               );
               print(response); // 콘솔에서 응답 확인
               ScaffoldMessenger.of(context).showSnackBar(

@@ -17,8 +17,8 @@ MainPageModel _$MainPageModelFromJson(Map<String, dynamic> json) =>
           .map(
               (e) => PopularProductsDtoList.fromJson(e as Map<String, dynamic>))
           .toList(),
-      (json['storeResponseDtoList'] as List<dynamic>?)
-          ?.map((e) => StoreResponseDtoList.fromJson(e as Map<String, dynamic>))
+      (json['storeResponseDtoList'] as List<dynamic>)
+          .map((e) => StoreResponseDtoList.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

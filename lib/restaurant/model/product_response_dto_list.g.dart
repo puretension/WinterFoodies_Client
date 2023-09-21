@@ -9,7 +9,7 @@ part of 'product_response_dto_list.dart';
 ProductResponseDtoList _$ProductResponseDtoListFromJson(
         Map<String, dynamic> json) =>
     ProductResponseDtoList(
-      json['id'] as int,
+      (json['id'] as num).toDouble(),
       json['productName'] as String,
     );
 

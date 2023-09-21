@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:winter_foodies/common/const/data.dart';
 import 'package:winter_foodies/common/dio/dio.dart';
 import 'package:winter_foodies/common/storage/secure_storage.dart';
+import 'package:winter_foodies/common/view/splash_screen.dart';
 import 'package:winter_foodies/user/model/signup_response.dart';
 import 'package:winter_foodies/user/model/signup_user_model.dart';
 import 'package:winter_foodies/user/model/user_model.dart';

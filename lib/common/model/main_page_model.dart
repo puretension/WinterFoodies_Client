@@ -12,7 +12,7 @@ class MainPageModel {
   final String like;
   final List<ProductResponseDtoList> productResponseDtoList;
   final List<PopularProductsDtoList> popularProductsDtoList;
-  final List<StoreResponseDtoList>? storeResponseDtoList;
+  final List<StoreResponseDtoList> storeResponseDtoList;
 
   MainPageModel(
     this.like,

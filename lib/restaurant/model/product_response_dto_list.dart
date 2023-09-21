@@ -5,7 +5,7 @@ part 'product_response_dto_list.g.dart';
 
 @JsonSerializable()
 class ProductResponseDtoList {
-  final int id;
+  final double id;
   final String productName;
 
   ProductResponseDtoList(this.id, this.productName);
